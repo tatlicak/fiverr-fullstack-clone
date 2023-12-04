@@ -1,7 +1,10 @@
 import express from "express";
 import mongoose from "mongoose";
-import userRoutes from './routes/user.routes.js'
-import authRoutes from './routes/auth.routes.js'
+import userRoutes from './routes/user.routes.js';
+import authRoutes from './routes/auth.routes.js';
+import cookieParser from "cookie-parser";
+
+
 
 const port = process.env.APP_PORT;
 
@@ -15,6 +18,8 @@ mongoose.connect(process.env.DATABASE)
 //Accept data from request body
 app.use(express.json());
 
+//For taking cookies
+app.use(cookieParser())
 
 //Definition of Routes
 app.use("/api/user", userRoutes);

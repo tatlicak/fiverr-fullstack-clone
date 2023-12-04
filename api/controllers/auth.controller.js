@@ -1,6 +1,7 @@
 import userModel from "../models/user.model.js";
 import User from "../models/user.model.js"
-import bcrypt, { hash } from "bcrypt"
+import bcrypt, { hash } from "bcrypt";
+import jwt from "jsonwebtoken";
 
 // Create New Account
 const register = async(req ,res, next) => {
@@ -49,16 +50,33 @@ const isPassTrue = bcrypt.compareSync(
     req.body.password,
     existingUser.password
 )
+
 //if password is false return error
+
 if(!isPassTrue) {
     return res.status(401).json({
         message: 'An Error occured. Login failed. Please check your login credentials..',
     });
 }
 
+ // if password is correct, create jwt token
+
+const token = jwt.sign({
+    id: existingUser._id,
+    isSeller: existingUser.isSeller,
+},
+process.env.JWT_SECRET
+);
+
+
 existingUser.password="*****";
 
-        res.status(200).json({
+
+        res.cookie('accesssToken', token, {
+            httpOnly: true,
+        })
+        .status(200)
+        .json({
             message: 'Login is successful',
             user: existingUser,
         });
