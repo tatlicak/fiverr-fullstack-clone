@@ -1,6 +1,10 @@
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../utils/api";
+
 const LoginPage = () => {
+
+  const navigate = useNavigate(); 
+
   const handleSubmit = (e) => {
     e.preventDefault();
 
@@ -16,6 +20,8 @@ const LoginPage = () => {
               'currentUser',
               JSON.stringify(res.data.user)
             );
+
+            navigate("/")
       })
       .catch((err) => console.log(err));
   };

@@ -1,4 +1,4 @@
-import userModel from "../models/user.model.js";
+
 import User from "../models/user.model.js"
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
@@ -32,14 +32,13 @@ const register = async(req ,res, next) => {
 const login = async(req ,res, next) => {
     try {
         // Find user by username
-        console.log(req.body.username, req.body.password)
+        
         const existingUser = await User.findOne({
            username:req.body.username
         });
 //if user doesn't exist send error message
 
 if(!existingUser) {
-    console.log(" Urername issue...")
     return res.status(404).json({
         message: 'User not Found, Please check your login credentials..',
     });
@@ -56,8 +55,7 @@ const isPassTrue = bcrypt.compareSync(
 //if password is false return error
 
 if(!isPassTrue) {
-    console.log(" Password issue...")
-    return res.status(401).json({
+        return res.status(401).json({
         message: 'An Error occured. Login failed. Please check your login credentials..',
     });
 }
@@ -75,7 +73,7 @@ process.env.JWT_SECRET
 existingUser.password="*****";
 
 
-        res.cookie('accesssToken', token, {
+        res.cookie('accessToken', token, {
             httpOnly: true,
         })
         .status(200)
@@ -91,8 +89,13 @@ existingUser.password="*****";
     }
 };
 
-//User Logout
-const logout = () => {};
+//User Logout and delete cookies
+const logout = (req,res, next) => {
+    
+  res.clearCookie("accessToken").status(200).json({
+        message: 'User logged out from their account'
+    })
+};
  
 export {
     register,
