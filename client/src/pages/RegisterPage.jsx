@@ -1,8 +1,13 @@
 import { useState } from "react"
 import axios from "axios";
+import api from "../utils/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegisterPage = () => {
-  const [isChecked, setIsChecked] = useState(false)
+  const [isChecked, setIsChecked] = useState(false);
+
+  const navigate = useNavigate();
 
   const upload = async (file) => {
     const data = new FormData();
@@ -32,12 +37,12 @@ const RegisterPage = () => {
     const data = Object.fromEntries(form.entries());
 
     //uploading image to the cloud
-    const imgUrl = await upload(data.image);
+    const imgUrl = await upload(data.avatar);
 
     console.log()
 
     //adding image url to data
-    data.image = imgUrl;
+    data.avatar = imgUrl;
 
     //user's account type
     data.isSeller = isChecked;
@@ -45,10 +50,19 @@ const RegisterPage = () => {
     console.log('1',data);
 
     //sending request to api endpoint for creating user account
-    axios
-      .post('http://localhost:8787/api/auth/register', data, 
-      { withCredentials: true, })
-      .then((res) => console.log('2',res.data));
+   api.post('/auth/register', data)
+      .then((res) =>{
+        
+        //redirect to login
+        navigate("/login")
+        //send notification
+        toast.success("Your account was created successfully. Please Log in...");
+
+      }).catch((err) => { 
+
+         toast.error("An error was occured when creating your account");
+     
+        });
   }
 
   return (
@@ -89,8 +103,8 @@ const RegisterPage = () => {
           <div className="mb-5">
             <label htmlFor="avatar" className="block mb-2 text-sm font-medium text-gray-900 ">Profile Image</label>
             <input type="file"
-              id="image"
-              name="image"
+              id="avatar"
+              name="avatar"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               required />
           </div>
@@ -98,7 +112,7 @@ const RegisterPage = () => {
           <div className="mb-5">
             <label htmlFor="user-country" className="block mb-2 text-sm font-medium text-gray-900 ">Country</label>
             <input type="text"
-              id="customer-country"
+              id="country"
               name="country"
               className="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 "
               required
@@ -125,8 +139,7 @@ const RegisterPage = () => {
             <input
               disabled={!isChecked}
               type="tel"
-              id="seller-phone"
-              name="seller-phone"
+              name="phone"
               className="disabled:bg-gray-100 bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 
                           focus:border-blue-500 block w-full p-2.5 "
               pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"

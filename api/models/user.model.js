@@ -15,7 +15,7 @@ const userSchema = new Schema ({
         type: String,
         required:[true, 'Password can not be null'],
     },
-    img: {
+    avatar: {
         type:String,
         //required: [true, 'Image can not be null']
     },

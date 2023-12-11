@@ -31,13 +31,15 @@ const register = async(req ,res, next) => {
 //User Login
 const login = async(req ,res, next) => {
     try {
-        // Find user by email
+        // Find user by username
+        console.log(req.body.username, req.body.password)
         const existingUser = await User.findOne({
-           email:req.body.email
+           username:req.body.username
         });
 //if user doesn't exist send error message
 
 if(!existingUser) {
+    console.log(" Urername issue...")
     return res.status(404).json({
         message: 'User not Found, Please check your login credentials..',
     });
@@ -54,6 +56,7 @@ const isPassTrue = bcrypt.compareSync(
 //if password is false return error
 
 if(!isPassTrue) {
+    console.log(" Password issue...")
     return res.status(401).json({
         message: 'An Error occured. Login failed. Please check your login credentials..',
     });
