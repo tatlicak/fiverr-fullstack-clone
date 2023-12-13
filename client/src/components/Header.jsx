@@ -34,11 +34,11 @@ const Header = () => {
                     <img src={currentUser.avatar} alt="" className="w-[40px] h-[40px] rounded-full object-cover"/>
                     <span>{currentUser.username}</span>
                     
-                    <div className="hidden group-hover:flex flex-col absolute top-10 bg-gray-200 rounded-md p-1">
+                    <div className="text-[13px] hidden group-hover:flex flex-col absolute top-10 bg-gray-200 rounded-md p-1">
                       {currentUser.isSeller && (
                         <>
                         <Link className="px-5 p-3 py-2 hover:bg-gray-100" > Services </Link>
-                        <Link className="px-5 p-3 py-2 hover:bg-gray-100" > Add New Service </Link>
+                        <Link className="right-[-10px] whitespace-nowrap px-5 p-3 py-2 hover:bg-gray-100" > Add Service </Link>
                         </>
                       )}
                       
