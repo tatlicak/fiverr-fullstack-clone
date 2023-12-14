@@ -28,7 +28,20 @@ app.use(cors({ origin: 'http://localhost:5173', credentials: true }));
 //Definition of Routes
 app.use("/api/user", userRoutes);
 app.use("/api/auth", authRoutes);
-app.use("/api/gig", gigRoutes);
+app.use("/api/gigs", gigRoutes);
+
+//Global Error Handling
+//From now on, if we use next in any middleware we write and send an error, 
+//this middleware will be activated and send the error message to the user at the front end.
+app.use((err, req, res, next) => {
+    const errStatus = err.status || 500;
+    const errMessage = err.message || 'We are soryy. Something went wrong';
+
+    return res.status(errStatus).json({
+        message: errMessage
+    });
+})
+
 
 app.listen(port, () => {
 

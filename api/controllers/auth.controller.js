@@ -2,6 +2,7 @@
 import User from "../models/user.model.js"
 import bcrypt, { hash } from "bcrypt";
 import jwt from "jsonwebtoken";
+import error from "../utils/error.js";
 
 // Create New Account
 const register = async(req ,res, next) => {
@@ -21,10 +22,8 @@ const register = async(req ,res, next) => {
             message: 'New User is created',
             newUser,
         });
-    } catch (error) {
-        res.status(500).json({
-            message: error.message
-        });
+    } catch (err) {
+        next(error(400, 'An error occurs while registering user'))
     }
 };
 
@@ -39,10 +38,9 @@ const login = async(req ,res, next) => {
 //if user doesn't exist send error message
 
 if(!existingUser) {
-    return res.status(404).json({
-        message: 'User not Found, Please check your login credentials..',
-    });
 
+    return next(error(400,'User not Found, Please check your login credentials..'));
+    
 }
 
 //if user exists, control password 
@@ -55,9 +53,9 @@ const isPassTrue = bcrypt.compareSync(
 //if password is false return error
 
 if(!isPassTrue) {
-        return res.status(401).json({
-        message: 'An Error occured. Login failed. Please check your login credentials..',
-    });
+
+    return next(error(401,'An Error occured. Login failed. Please check your login credentials..'));
+       
 }
 
  // if password is correct, create jwt token
@@ -82,10 +80,9 @@ existingUser.password="*****";
             user: existingUser,
         });
     } catch (error) {
-        res.status(401).json({
-            message: "Login attempt failed...",
-            error: error.message
-        });
+
+        next(error(401,"Login attempt failed..."));
+      
     }
 };
 

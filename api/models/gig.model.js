@@ -1,4 +1,4 @@
-import { Schema } from "mongoose";
+import mongoose,{ Schema } from "mongoose";
 
 const gigSchema = new Schema ({
     userId: {
@@ -18,7 +18,7 @@ const gigSchema = new Schema ({
         type: Number,
         min:1,
         max:5,
-       default: 0
+       default: 1
     },
     totalRatings: {
         type: Number,
